@@ -1,2 +1,2 @@
 echo "File created for Jenkins first job"
-echo "First commit for Jenkins on EC2"
+echo "First commit for Jenkins"
