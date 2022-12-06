@@ -13,7 +13,7 @@ pipeline {
             steps{
                  aws cloudformation create-stack \
                  --stack-name EC2instance.yaml \
-                 --template-body EC2instance.yaml
+                 --template-body EC2instance.yaml \
             }
         }
 }
