@@ -1,0 +1,48 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: |
+  This template is to launch EC2 instance with httpd installed.
+Parameters:
+  ImageID: 
+    Default: ami-0b0dcb5067f052a63
+    Description: This is baseline linux image
+    Type: String
+Resources:
+  WebAppInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref ImageID
+      InstanceType: t2.micro
+      KeyName: Launch_ec2
+      SecurityGroupIds:
+        - !Ref WebAppSecurityGroup
+      UserData: 
+        Fn::Base64: |
+          #!/bin/bash -xe
+          yum update -y
+          yum install git -y
+          yum install -y httpd # install web server 
+          systemctl start httpd
+          systemctl enable httpd
+          echo "What are you looking at?" > /var/www/html/index.html
+
+  WebAppSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: Prod
+      GroupDescription: Allow http/https and ssh inbound rules
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+
